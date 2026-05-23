@@ -1,0 +1,10 @@
+{
+	"id": "gemini-cli-sidebar",
+	"name": "Gemini CLI Sidebar",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Run Gemini CLI directly in an Obsidian sidebar pane.",
+	"author": "desmond wen",
+	"authorUrl": "https://github.com/desmondwen",
+	"isDesktopOnly": true
+}

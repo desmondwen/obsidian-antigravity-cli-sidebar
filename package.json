@@ -1,0 +1,24 @@
+{
+  "name": "geminiclisidebar",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "node esbuild.config.mjs production",
+    "dev": "node esbuild.config.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "desmond wen",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/xterm": "^6.0.0",
+    "builtin-modules": "^5.2.0",
+    "esbuild": "^0.28.0",
+    "obsidian": "^1.12.3",
+    "tslib": "^2.8.1"
+  }
+}
