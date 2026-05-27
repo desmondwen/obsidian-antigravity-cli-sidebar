@@ -1,9 +1,9 @@
 {
 	"id": "antigravity-cli-sidebar",
 	"name": "Antigravity CLI Sidebar",
-	"version": "2.0.0",
+	"version": "2.0.1",
 	"minAppVersion": "0.15.0",
-	"description": "Run Antigravity CLI directly in an Obsidian sidebar pane.",
+	"description": "Run Antigravity CLI directly in a sidebar pane.",
 	"author": "desmond wen",
 	"authorUrl": "https://github.com/desmondwen",
 	"isDesktopOnly": true
