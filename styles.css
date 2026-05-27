@@ -1,4 +1,4 @@
-.gemini-terminal-container {
+.antigravity-terminal-container {
     width: 100%;
     height: 100%;
     background-color: #000;
@@ -6,6 +6,6 @@
     overflow: hidden;
 }
 
-.gemini-terminal-container .xterm {
+.antigravity-terminal-container .xterm {
     height: 100%;
 }

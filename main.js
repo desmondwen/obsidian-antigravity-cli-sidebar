@@ -37,7 +37,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
 // src/main.ts
 var main_exports = {};
 __export(main_exports, {
-  default: () => GeminiPlugin
+  default: () => AntigravityPlugin
 });
 module.exports = __toCommonJS(main_exports);
 var import_obsidian2 = require("obsidian");
@@ -9321,7 +9321,7 @@ var TerminalManager = class {
     const isWindows = process.platform === "win32";
     const scriptContent = isWindows ? TERMINAL_WIN_PY : TERMINAL_PTY_PY;
     const scriptName = isWindows ? "terminal_win.py" : "terminal_pty.py";
-    const tempDir = fs2.mkdtempSync(path.join(os2.tmpdir(), "gemini-pty-"));
+    const tempDir = fs2.mkdtempSync(path.join(os2.tmpdir(), "antigravity-pty-"));
     const scriptPath = path.join(tempDir, scriptName);
     fs2.writeFileSync(scriptPath, Buffer.from(scriptContent, "base64"));
     fs2.chmodSync(scriptPath, 493);
@@ -9378,7 +9378,7 @@ var TerminalManager = class {
 };
 
 // src/TerminalView.ts
-var VIEW_TYPE_GEMINI_TERMINAL = "gemini-terminal-view";
+var VIEW_TYPE_ANTIGRAVITY_TERMINAL = "antigravity-terminal-view";
 var TerminalView = class extends import_obsidian.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
@@ -9390,17 +9390,17 @@ var TerminalView = class extends import_obsidian.ItemView {
     this.plugin = plugin;
   }
   getViewType() {
-    return VIEW_TYPE_GEMINI_TERMINAL;
+    return VIEW_TYPE_ANTIGRAVITY_TERMINAL;
   }
   getDisplayText() {
-    return "Gemini CLI";
+    return "Antigravity CLI";
   }
   getIcon() {
     return "bot";
   }
   async onOpen() {
     var _a4, _b;
-    this.container = this.contentEl.createDiv({ cls: "gemini-terminal-container" });
+    this.container = this.contentEl.createDiv({ cls: "antigravity-terminal-container" });
     this.terminal = new Dl({
       cursorBlink: true,
       theme: {
@@ -9419,7 +9419,7 @@ var TerminalView = class extends import_obsidian.ItemView {
       cols: this.terminal.cols,
       rows: this.terminal.rows,
       cwd: vaultPath,
-      command: command || "gemini",
+      command: command || "agy",
       args: args.split(" ").filter((a) => a.length > 0)
     }, (data) => {
       this.terminal.write(data);
@@ -9449,10 +9449,10 @@ var TerminalView = class extends import_obsidian.ItemView {
 
 // src/main.ts
 var DEFAULT_SETTINGS = {
-  command: "gemini",
-  args: "--yolo --resume latest"
+  command: "agy",
+  args: "--dangerously-skip-permissions --continue"
 };
-var GeminiPlugin = class extends import_obsidian2.Plugin {
+var AntigravityPlugin = class extends import_obsidian2.Plugin {
   constructor() {
     super(...arguments);
     __publicField(this, "settings");
@@ -9460,47 +9460,76 @@ var GeminiPlugin = class extends import_obsidian2.Plugin {
   async onload() {
     await this.loadSettings();
     this.registerView(
-      VIEW_TYPE_GEMINI_TERMINAL,
+      VIEW_TYPE_ANTIGRAVITY_TERMINAL,
       (leaf) => new TerminalView(leaf, this)
     );
-    this.addRibbonIcon("bot", "Open Gemini CLI", () => {
+    this.addRibbonIcon("bot", "Open Antigravity CLI", () => {
       this.activateView();
     });
     this.addCommand({
-      id: "open-gemini-cli",
-      name: "Open Gemini CLI",
+      id: "open-antigravity-cli",
+      name: "Open Antigravity CLI",
       callback: () => {
         this.activateView();
       }
     });
-    this.addSettingTab(new GeminiSettingTab(this.app, this));
+    this.addSettingTab(new AntigravitySettingTab(this.app, this));
   }
   async onunload() {
-    this.app.workspace.detachLeavesOfType(VIEW_TYPE_GEMINI_TERMINAL);
+    this.app.workspace.detachLeavesOfType(VIEW_TYPE_ANTIGRAVITY_TERMINAL);
   }
   async activateView() {
     const { workspace } = this.app;
     let leaf = null;
-    const leaves = workspace.getLeavesOfType(VIEW_TYPE_GEMINI_TERMINAL);
+    const leaves = workspace.getLeavesOfType(VIEW_TYPE_ANTIGRAVITY_TERMINAL);
     if (leaves.length > 0) {
       leaf = leaves[0];
     } else {
       leaf = workspace.getRightLeaf(false);
       await leaf.setViewState({
-        type: VIEW_TYPE_GEMINI_TERMINAL,
+        type: VIEW_TYPE_ANTIGRAVITY_TERMINAL,
         active: true
       });
     }
     workspace.revealLeaf(leaf);
   }
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    const data = await this.loadData();
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, data);
+    let migrated = false;
+    if (this.settings.command === "gemini") {
+      this.settings.command = "agy";
+      migrated = true;
+    }
+    if (this.settings.args) {
+      let updatedArgs = this.settings.args;
+      if (updatedArgs.includes("--yolo")) {
+        updatedArgs = updatedArgs.replace("--yolo", "--dangerously-skip-permissions");
+        migrated = true;
+      }
+      if (updatedArgs.includes("-y") && !updatedArgs.includes("--dangerously-skip-permissions")) {
+        updatedArgs = updatedArgs.replace("-y", "--dangerously-skip-permissions");
+        migrated = true;
+      }
+      if (updatedArgs.includes("--resume latest")) {
+        updatedArgs = updatedArgs.replace("--resume latest", "--continue");
+        migrated = true;
+      }
+      if (updatedArgs.includes("-r latest")) {
+        updatedArgs = updatedArgs.replace("-r latest", "--continue");
+        migrated = true;
+      }
+      this.settings.args = updatedArgs;
+    }
+    if (migrated) {
+      await this.saveSettings();
+    }
   }
   async saveSettings() {
     await this.saveData(this.settings);
   }
 };
-var GeminiSettingTab = class extends import_obsidian2.PluginSettingTab {
+var AntigravitySettingTab = class extends import_obsidian2.PluginSettingTab {
   constructor(app, plugin) {
     super(app, plugin);
     __publicField(this, "plugin");
@@ -9509,12 +9538,12 @@ var GeminiSettingTab = class extends import_obsidian2.PluginSettingTab {
   display() {
     const { containerEl } = this;
     containerEl.empty();
-    containerEl.createEl("h2", { text: "Gemini CLI Settings" });
-    new import_obsidian2.Setting(containerEl).setName("Gemini Command").setDesc("The command to run Gemini CLI (e.g., /usr/local/bin/gemini or just gemini).").addText((text) => text.setPlaceholder("gemini").setValue(this.plugin.settings.command).onChange(async (value) => {
+    containerEl.createEl("h2", { text: "Antigravity CLI Settings" });
+    new import_obsidian2.Setting(containerEl).setName("Antigravity Command").setDesc("The command to run Antigravity CLI (e.g., /home/desmond/.local/bin/agy or just agy).").addText((text) => text.setPlaceholder("agy").setValue(this.plugin.settings.command).onChange(async (value) => {
       this.plugin.settings.command = value;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian2.Setting(containerEl).setName("Default Arguments").setDesc("Default arguments to pass to the Gemini CLI.").addText((text) => text.setPlaceholder("--yolo --resume latest").setValue(this.plugin.settings.args).onChange(async (value) => {
+    new import_obsidian2.Setting(containerEl).setName("Default Arguments").setDesc("Default arguments to pass to the Antigravity CLI.").addText((text) => text.setPlaceholder("--dangerously-skip-permissions --continue").setValue(this.plugin.settings.args).onChange(async (value) => {
       this.plugin.settings.args = value;
       await this.plugin.saveSettings();
     }));

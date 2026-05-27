@@ -2,28 +2,28 @@ import { ItemView, WorkspaceLeaf } from 'obsidian';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { TerminalManager } from './TerminalManager';
-import GeminiPlugin from './main';
+import AntigravityPlugin from './main';
 
-export const VIEW_TYPE_GEMINI_TERMINAL = 'gemini-terminal-view';
+export const VIEW_TYPE_ANTIGRAVITY_TERMINAL = 'antigravity-terminal-view';
 
 export class TerminalView extends ItemView {
     private terminal: Terminal;
     private fitAddon: FitAddon;
     private manager: TerminalManager;
     private container: HTMLElement;
-    private plugin: GeminiPlugin;
+    private plugin: AntigravityPlugin;
 
-    constructor(leaf: WorkspaceLeaf, plugin: GeminiPlugin) {
+    constructor(leaf: WorkspaceLeaf, plugin: AntigravityPlugin) {
         super(leaf);
         this.plugin = plugin;
     }
 
     getViewType(): string {
-        return VIEW_TYPE_GEMINI_TERMINAL;
+        return VIEW_TYPE_ANTIGRAVITY_TERMINAL;
     }
 
     getDisplayText(): string {
-        return 'Gemini CLI';
+        return 'Antigravity CLI';
     }
 
     getIcon(): string {
@@ -31,7 +31,7 @@ export class TerminalView extends ItemView {
     }
 
     async onOpen() {
-        this.container = this.contentEl.createDiv({ cls: 'gemini-terminal-container' });
+        this.container = this.contentEl.createDiv({ cls: 'antigravity-terminal-container' });
         
         this.terminal = new Terminal({
             cursorBlink: true,
@@ -57,7 +57,7 @@ export class TerminalView extends ItemView {
             cols: this.terminal.cols,
             rows: this.terminal.rows,
             cwd: vaultPath,
-            command: command || 'gemini',
+            command: command || 'agy',
             args: args.split(' ').filter(a => a.length > 0)
         }, (data) => {
             this.terminal.write(data);

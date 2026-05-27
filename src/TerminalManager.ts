@@ -24,7 +24,7 @@ export class TerminalManager {
         const isWindows = process.platform === 'win32';
         const scriptContent = isWindows ? TERMINAL_WIN_PY : TERMINAL_PTY_PY;
         const scriptName = isWindows ? 'terminal_win.py' : 'terminal_pty.py';
-        const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gemini-pty-'));
+        const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'antigravity-pty-'));
         const scriptPath = path.join(tempDir, scriptName);
         
         fs.writeFileSync(scriptPath, Buffer.from(scriptContent, 'base64'));

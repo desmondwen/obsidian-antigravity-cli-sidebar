@@ -1,13 +1,13 @@
-# Gemini CLI Sidebar
+# Antigravity CLI Sidebar
 
-An [Obsidian](https://obsidian.md/) plugin that embeds **Gemini CLI** directly into a sidebar pane, so you can chat with Gemini without leaving your notes.
+An [Obsidian](https://obsidian.md/) plugin that embeds **Antigravity CLI** directly into a sidebar pane, so you can chat with Antigravity without leaving your notes.
 
 ![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-blue)
 ![Obsidian](https://img.shields.io/badge/obsidian-%5E0.15.0-purple)
 
 ## Features
 
-- 🚀 Run Gemini CLI inside Obsidian's sidebar
+- 🚀 Run Antigravity CLI inside Obsidian's sidebar
 - ⌨️ Full terminal interaction (typing, scrolling, resizing)
 - 🎨 Clean xterm.js-based terminal UI
 - ⚙️ Customizable command and arguments
@@ -18,8 +18,8 @@ An [Obsidian](https://obsidian.md/) plugin that embeds **Gemini CLI** directly i
 Before installing, make sure you have:
 
 1. **Obsidian Desktop** (Windows / macOS / Linux)
-2. **Gemini CLI** installed and available in your system `PATH` as `gemini`
-   - Install from: https://github.com/google/gemini-cli
+2. **Antigravity CLI** installed and available in your system `PATH` as `agy`
+   - Install from: https://antigravity.google
 3. **Python 3** installed (used for the PTY wrapper)
    - Linux/macOS: `python3`
    - Windows: `python`
@@ -31,17 +31,17 @@ Before installing, make sure you have:
 1. Download the latest release (`main.js`, `manifest.json`, `styles.css`).
 2. Create a folder inside your Vault:
    ```
-   <vault>/.obsidian/plugins/gemini-cli-sidebar/
+   <vault>/.obsidian/plugins/antigravity-cli-sidebar/
    ```
 3. Copy the three files into that folder.
 4. Restart Obsidian.
-5. Go to **Settings → Community Plugins**, find **Gemini CLI Sidebar**, and enable it.
+5. Go to **Settings → Community Plugins**, find **Antigravity CLI Sidebar**, and enable it.
 
 ### From Source
 
 ```bash
-git clone https://github.com/desmondwen/gemini-cli-sidebar.git
-cd gemini-cli-sidebar
+git clone https://github.com/desmondwen/antigravity-cli-sidebar.git
+cd antigravity-cli-sidebar
 npm install
 npm run build
 ```
@@ -52,24 +52,24 @@ Then copy `main.js`, `manifest.json`, and `styles.css` to your Vault's plugins f
 
 ### Open the Terminal
 
-Once enabled, you can open the Gemini CLI sidebar in two ways:
+Once enabled, you can open the Antigravity CLI sidebar in two ways:
 
 1. **Ribbon Icon**: Click the 🤖 **bot icon** in Obsidian's left sidebar.
-2. **Command Palette**: Press `Ctrl+P` (or `Cmd+P`) and type **"Open Gemini CLI"**.
+2. **Command Palette**: Press `Ctrl+P` (or `Cmd+P`) and type **"Open Antigravity CLI"**.
 
 The terminal will appear in the right sidebar, automatically launching:
 ```bash
-gemini --yolo --resume latest
+agy --dangerously-skip-permissions --continue
 ```
 
 ### Customize Settings
 
-Go to **Settings → Gemini CLI Settings** to change:
+Go to **Settings → Antigravity CLI Settings** to change:
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| **Gemini Command** | Path to the Gemini CLI executable | `gemini` |
-| **Default Arguments** | Arguments passed on every launch | `--yolo --resume latest` |
+| **Antigravity Command** | Path to the Antigravity CLI executable | `agy` |
+| **Default Arguments** | Arguments passed on every launch | `--dangerously-skip-permissions --continue` |
 
 ## How It Works
 
@@ -85,14 +85,14 @@ The terminal uses your **Vault root** as the working directory (`cwd`).
 1. Disable the plugin in **Settings → Community Plugins**.
 2. (Optional) Delete the plugin folder:
    ```
-   <vault>/.obsidian/plugins/gemini-cli-sidebar/
+   <vault>/.obsidian/plugins/antigravity-cli-sidebar/
    ```
 
 ## Troubleshooting
 
 | Problem | Solution |
 |---------|----------|
-| Terminal is blank | Make sure `gemini` is installed and in your `PATH`. Test by running `gemini` in a normal terminal. |
+| Terminal is blank | Make sure `agy` is installed and in your `PATH`. Test by running `agy` in a normal terminal. |
 | "python3" not found | On some systems, only `python` exists. Create a symlink: `ln -s $(which python) /usr/local/bin/python3` |
 | Plugin won't enable | Ensure you are on **Obsidian Desktop**; this plugin does not support mobile. |
 
