@@ -2,6 +2,12 @@
 
 An [Obsidian](https://obsidian.md/) plugin that embeds **Antigravity CLI** directly into a sidebar pane, so you can chat with Antigravity without leaving your notes.
 
+> [!NOTE]
+> **Version 2.0 Update:**
+> This version (V2.0) has transitioned to support the new **Antigravity CLI** (`agy`).
+> The older V1.0 version was designed for the original **Gemini CLI** (`gemini`). Since Google is deprecating/shutting down Gemini CLI, V2.0 has been fully migrated to support Antigravity CLI and handles automatic migration of your settings.
+
+![Version](https://img.shields.io/badge/version-2.0.0-green)
 ![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-blue)
 ![Obsidian](https://img.shields.io/badge/obsidian-%5E0.15.0-purple)
 
