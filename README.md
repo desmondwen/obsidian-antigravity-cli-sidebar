@@ -40,8 +40,8 @@ Before installing, make sure you have:
 ### From Source
 
 ```bash
-git clone https://github.com/desmondwen/antigravity-cli-sidebar.git
-cd antigravity-cli-sidebar
+git clone https://github.com/desmondwen/obsidian-antigravity-cli-sidebar.git
+cd obsidian-antigravity-cli-sidebar
 npm install
 npm run build
 ```
