@@ -9405,6 +9405,8 @@ var TerminalView = class extends import_obsidian.ItemView {
       cursorBlink: true,
       fontFamily: this.plugin.settings.fontFamily || "monospace",
       fontSize: this.plugin.settings.fontSize || 14,
+      customGlyphs: false,
+      rescaleOverlappingGlyphs: true,
       theme: {
         background: "#000000"
       },
