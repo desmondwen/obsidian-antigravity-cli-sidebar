@@ -9340,7 +9340,7 @@ var TerminalManager = class {
     ];
     this.process = (0, import_child_process.spawn)(pythonCmd, spawnArgs, {
       cwd: options.cwd,
-      env: { ...process.env, TERM: "xterm-256color" }
+      env: this.getEnhancedEnv()
     });
     (_a4 = this.process.stdout) == null ? void 0 : _a4.on("data", (data) => {
       onData(data.toString());
@@ -9374,6 +9374,44 @@ var TerminalManager = class {
       if (fs2.existsSync(dir)) fs2.rmdirSync(dir);
     } catch (e) {
     }
+  }
+  getEnhancedEnv() {
+    const env = { ...process.env, TERM: "xterm-256color" };
+    const shell = process.env.SHELL || (process.platform === "win32" ? "cmd.exe" : "/bin/zsh");
+    env.SHELL = shell;
+    if (process.platform !== "win32") {
+      let userPath = process.env.PATH || "";
+      try {
+        const shellOutput = require("child_process").execSync(`${shell} -l -c 'echo __PATH__:$PATH'`, {
+          encoding: "utf8",
+          timeout: 3e3
+        });
+        const match = shellOutput.match(/__PATH__:(.*)/);
+        if (match && match[1]) {
+          userPath = match[1].trim();
+        }
+      } catch (e) {
+      }
+      const home = os2.homedir();
+      const commonPaths = [
+        "/opt/homebrew/bin",
+        "/opt/homebrew/sbin",
+        "/usr/local/bin",
+        "/usr/local/sbin",
+        path.join(home, ".local", "bin"),
+        path.join(home, ".cargo", "bin")
+      ];
+      const currentParts = userPath.split(path.delimiter).filter(Boolean);
+      for (const p of commonPaths) {
+        if (fs2.existsSync(p) && !currentParts.includes(p)) {
+          currentParts.unshift(p);
+        }
+      }
+      env.PATH = currentParts.join(path.delimiter);
+      if (!env.LANG) env.LANG = "en_US.UTF-8";
+      if (!env.LC_ALL) env.LC_ALL = "en_US.UTF-8";
+    }
+    return env;
   }
 };
 
