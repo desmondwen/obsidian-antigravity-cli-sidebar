@@ -35,6 +35,8 @@ export class TerminalView extends ItemView {
         
         this.terminal = new Terminal({
             cursorBlink: true,
+            fontFamily: this.plugin.settings.fontFamily || 'monospace',
+            fontSize: this.plugin.settings.fontSize || 14,
             theme: {
                 background: '#000000',
             },
