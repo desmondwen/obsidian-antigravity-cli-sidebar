@@ -9340,7 +9340,7 @@ var TerminalManager = class {
     ];
     this.process = (0, import_child_process.spawn)(pythonCmd, spawnArgs, {
       cwd: options.cwd,
-      env: { ...process.env, TERM: "xterm-256color" }
+      env: this.getEnhancedEnv()
     });
     (_a4 = this.process.stdout) == null ? void 0 : _a4.on("data", (data) => {
       onData(data.toString());
@@ -9375,6 +9375,44 @@ var TerminalManager = class {
     } catch (e) {
     }
   }
+  getEnhancedEnv() {
+    const env = { ...process.env, TERM: "xterm-256color" };
+    const shell = process.env.SHELL || (process.platform === "win32" ? "cmd.exe" : "/bin/zsh");
+    env.SHELL = shell;
+    if (process.platform !== "win32") {
+      let userPath = process.env.PATH || "";
+      try {
+        const shellOutput = require("child_process").execSync(`${shell} -l -c 'echo __PATH__:$PATH'`, {
+          encoding: "utf8",
+          timeout: 3e3
+        });
+        const match = shellOutput.match(/__PATH__:(.*)/);
+        if (match && match[1]) {
+          userPath = match[1].trim();
+        }
+      } catch (e) {
+      }
+      const home = os2.homedir();
+      const commonPaths = [
+        "/opt/homebrew/bin",
+        "/opt/homebrew/sbin",
+        "/usr/local/bin",
+        "/usr/local/sbin",
+        path.join(home, ".local", "bin"),
+        path.join(home, ".cargo", "bin")
+      ];
+      const currentParts = userPath.split(path.delimiter).filter(Boolean);
+      for (const p of commonPaths) {
+        if (fs2.existsSync(p) && !currentParts.includes(p)) {
+          currentParts.unshift(p);
+        }
+      }
+      env.PATH = currentParts.join(path.delimiter);
+      if (!env.LANG) env.LANG = "en_US.UTF-8";
+      if (!env.LC_ALL) env.LC_ALL = "en_US.UTF-8";
+    }
+    return env;
+  }
 };
 
 // src/TerminalView.ts
@@ -9403,6 +9441,10 @@ var TerminalView = class extends import_obsidian.ItemView {
     this.container = this.contentEl.createDiv({ cls: "antigravity-terminal-container" });
     this.terminal = new Dl({
       cursorBlink: true,
+      fontFamily: this.plugin.settings.fontFamily || "monospace",
+      fontSize: this.plugin.settings.fontSize || 14,
+      customGlyphs: false,
+      rescaleOverlappingGlyphs: true,
       theme: {
         background: "#000000"
       },
@@ -9450,7 +9492,9 @@ var TerminalView = class extends import_obsidian.ItemView {
 // src/main.ts
 var DEFAULT_SETTINGS = {
   command: "agy",
-  args: "--dangerously-skip-permissions --continue"
+  args: "--dangerously-skip-permissions --continue",
+  fontFamily: "monospace",
+  fontSize: 14
 };
 var AntigravityPlugin = class extends import_obsidian2.Plugin {
   constructor() {
@@ -9545,6 +9589,15 @@ var AntigravitySettingTab = class extends import_obsidian2.PluginSettingTab {
     }));
     new import_obsidian2.Setting(containerEl).setName("Default Arguments").setDesc("Default arguments to pass to the Antigravity CLI.").addText((text) => text.setPlaceholder("--dangerously-skip-permissions --continue").setValue(this.plugin.settings.args).onChange(async (value) => {
       this.plugin.settings.args = value;
+      await this.plugin.saveSettings();
+    }));
+    new import_obsidian2.Setting(containerEl).setName("Font Family").setDesc('Terminal font family. Use a Nerd Font for proper glyph rendering (e.g., "JetBrainsMono Nerd Font Mono, monospace").').addText((text) => text.setPlaceholder("monospace").setValue(this.plugin.settings.fontFamily).onChange(async (value) => {
+      this.plugin.settings.fontFamily = value || DEFAULT_SETTINGS.fontFamily;
+      await this.plugin.saveSettings();
+    }));
+    new import_obsidian2.Setting(containerEl).setName("Font Size").setDesc("Terminal font size in pixels.").addText((text) => text.setPlaceholder("14").setValue(String(this.plugin.settings.fontSize)).onChange(async (value) => {
+      const parsed = parseInt(value, 10);
+      this.plugin.settings.fontSize = parsed > 0 ? parsed : DEFAULT_SETTINGS.fontSize;
       await this.plugin.saveSettings();
     }));
   }

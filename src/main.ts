@@ -4,11 +4,15 @@ import { TerminalView, VIEW_TYPE_ANTIGRAVITY_TERMINAL } from './TerminalView';
 interface AntigravitySettings {
 	command: string;
 	args: string;
+	fontFamily: string;
+	fontSize: number;
 }
 
 const DEFAULT_SETTINGS: AntigravitySettings = {
 	command: 'agy',
-	args: '--dangerously-skip-permissions --continue'
+	args: '--dangerously-skip-permissions --continue',
+	fontFamily: 'monospace',
+	fontSize: 14
 }
 
 export default class AntigravityPlugin extends Plugin {
@@ -134,6 +138,29 @@ class AntigravitySettingTab extends PluginSettingTab {
 				.setValue(this.plugin.settings.args)
 				.onChange(async (value) => {
 					this.plugin.settings.args = value;
+					await this.plugin.saveSettings();
+				}));
+
+		new Setting(containerEl)
+			.setName('Font Family')
+			.setDesc('Terminal font family. Use a Nerd Font for proper glyph rendering (e.g., "JetBrainsMono Nerd Font Mono, monospace").')
+			.addText(text => text
+				.setPlaceholder('monospace')
+				.setValue(this.plugin.settings.fontFamily)
+				.onChange(async (value) => {
+					this.plugin.settings.fontFamily = value || DEFAULT_SETTINGS.fontFamily;
+					await this.plugin.saveSettings();
+				}));
+
+		new Setting(containerEl)
+			.setName('Font Size')
+			.setDesc('Terminal font size in pixels.')
+			.addText(text => text
+				.setPlaceholder('14')
+				.setValue(String(this.plugin.settings.fontSize))
+				.onChange(async (value) => {
+					const parsed = parseInt(value, 10);
+					this.plugin.settings.fontSize = (parsed > 0) ? parsed : DEFAULT_SETTINGS.fontSize;
 					await this.plugin.saveSettings();
 				}));
 	}
